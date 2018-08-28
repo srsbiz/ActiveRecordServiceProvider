@@ -6,15 +6,16 @@
 
 namespace Ruckuus\Silex;
 
-use Silex\Application;
-use Silex\ServiceProviderInterface;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
+use Silex\Api\BootableProviderInterface;
 
-class ActiveRecordServiceProvider implements ServiceProviderInterface
+class ActiveRecordServiceProvider implements ServiceProviderInterface, BootableProviderInterface
 {
-    function register(Application $app){
+    function register(Container $app){
         $this->app = $app;
 
-        $app['ar.init'] = function (Application $app) {
+        $app['ar.init'] = function (Container $app) {
             \ActiveRecord\Config::initialize(function ($cfg) use ($app) {
                 $cfg->set_model_directory($app['ar.model_dir']);
                 $cfg->set_connections($app['ar.connections']);
@@ -31,6 +32,6 @@ class ActiveRecordServiceProvider implements ServiceProviderInterface
     }
 
     function boot(Application $app){
-        $this->app['ar.init'];
+        $app['ar.init'];
     }
 }
