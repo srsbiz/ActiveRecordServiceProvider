@@ -8,6 +8,7 @@ namespace Ruckuus\Silex;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Silex\Application;
 use Silex\Api\BootableProviderInterface;
 
 class ActiveRecordServiceProvider implements ServiceProviderInterface, BootableProviderInterface
