@@ -19,6 +19,14 @@ class ActiveRecordServiceProvider implements ServiceProviderInterface
                 $cfg->set_model_directory($app['ar.model_dir']);
                 $cfg->set_connections($app['ar.connections']);
                 $cfg->set_default_connection($app['ar.default_connection']);
+                
+                if ($app['debug'] && isset($app['ar.logger'])) {
+                    $cfg->set_logging(true);
+                    $cfg->set_logger($app['ar.logger']);
+                }
+                if (isset($app['ar.cache'])) {
+                    $cfg->set_cache($app['ar.cache'], isset($app['ar.cache_options']) ? $app['ar.cache_options'] : []);
+                }
             });
         });
     }

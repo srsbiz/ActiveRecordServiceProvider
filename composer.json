@@ -14,30 +14,14 @@
     ],
     "repositories": [
         {
-            "type": "package",
-            "package": {
-                "name": "kla/php-activerecord",
-                "version": "dev-master",
-                "autoload": {
-                    "psr-0": {
-                        "ActiveRecord": "lib/"
-                    },
-                    "files": [
-                        "ActiveRecord.php"
-                    ] 
-                },
-                "source": {
-                    "url": "https://github.com/kla/php-activerecord",
-                    "type": "git",
-                    "reference": "master"
-                }
-            }
+            "type": "vcs",
+            "url": "https://github.com/srsbiz/ActiveRecordServiceProvider"
         } 
      ],
     "require": {
         "php": ">=5.3.0",
         "silex/silex": "~1.0",
-        "php-activerecord/php-activerecord": "~1.1.1"
+        "php-activerecord/php-activerecord": "dev-file-cache"
     },
     "autoload": {
         "psr-0": { "Ruckuus\\Silex": "src" }
