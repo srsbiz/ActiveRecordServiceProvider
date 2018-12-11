@@ -1,5 +1,5 @@
 {
-    "name": "ruckuus/php-activerecord-service-provider",
+    "name": "srsbiz/php-activerecord-service-provider",
     "description": "A PHPActiveRecord Service Provider for Silex",
     "keywords": ["silex", "activerecord", "database", "orm"],
     "homepage": "https://github.com/ruckuus/ActiveRecordServiceProvider",
@@ -21,7 +21,7 @@
     "require": {
         "php": ">=5.3.0",
         "silex/silex": "~1.0",
-        "php-activerecord/php-activerecord": "dev-file-cache"
+        "srsbiz/php-activerecord": "~1.3"
     },
     "autoload": {
         "psr-0": { "Ruckuus\\Silex": "src" }

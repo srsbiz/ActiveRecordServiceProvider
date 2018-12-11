@@ -1,7 +1,7 @@
 ActiveRecordServiceProvider
 ===========================
 
-A PHP ActiveRecord ServiceProvider for Silex. 
+A PHP ActiveRecord ServiceProvider for Silex 1.*. 
 
 ## History
 
@@ -16,8 +16,8 @@ Just create a composer.json file for your project:
 ```JSON
 {
     "require": {
-        "ruckuus/php-activerecord-service-provider": "dev-master",
-        "silex/silex": "1.0.*@dev"
+        "srsbiz/php-activerecord-service-provider": "~1.0",
+        "silex/silex": "~1.0"
     }
 }
 ```
