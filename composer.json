@@ -27,9 +27,9 @@
     "require": {
         "php": ">=5.3.0",
         "silex/silex": "~1.0",
-        "srsbiz/php-activerecord": "~2.0"
+        "srsbiz/php-activerecord": "~2.1"
     },
     "autoload": {
-        "psr-4": { "srsbiz\\Silex": "src" }
+        "psr-4": { "srsbiz\\Silex\\": "src" }
     }
 }
