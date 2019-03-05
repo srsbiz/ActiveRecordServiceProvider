@@ -1,0 +1,86 @@
+{% extends '@WebProfiler/Profiler/layout.html.twig' %}
+
+{% import _self as logger %}
+
+{% block toolbar %}
+	{% set color = collector.getStatusColor() %}
+    {% if collector.queryCount %}
+        {% set icon %}
+            <svg enable-background="new 0 0 48 48" width="16" height="28" version="1.1" viewBox="0 0 48 48" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g id="Expanded"><g><g><path d="M24,20c-11.215,0-20-3.953-20-9s8.785-9,20-9s20,3.953,20,9S35.215,20,24,20z M24,4C15.486,4,6,6.875,6,11s9.486,7,18,7     s18-2.875,18-7S32.514,4,24,4z"/></g><g><path d="M24,28c-11.215,0-20-3.953-20-9v-8c0-0.553,0.447-1,1-1s1,0.447,1,1v8c0,4.125,9.486,7,18,7s18-2.875,18-7v-8     c0-0.553,0.447-1,1-1s1,0.447,1,1v8C44,24.047,35.215,28,24,28z"/></g><g><path d="M24,37c-11.215,0-20-3.953-20-9v-9c0-0.553,0.447-1,1-1s1,0.447,1,1v9c0,4.125,9.486,7,18,7s18-2.875,18-7v-9     c0-0.553,0.447-1,1-1s1,0.447,1,1v9C44,33.047,35.215,37,24,37z"/></g><g><path d="M24,46c-11.215,0-20-3.953-20-9v-9c0-0.553,0.447-1,1-1s1,0.447,1,1v9c0,4.125,9.486,7,18,7s18-2.875,18-7v-9     c0-0.553,0.447-1,1-1s1,0.447,1,1v9C44,42.047,35.215,46,24,46z"/></g></g></g></svg>
+            <span class="{% if color %}sf-toolbar-status sf-toolbar-status-{{ color }}{% else %}sf-toolbar-value{% endif %}">{{ collector.queryCount }}</span>
+			<span class="sf-toolbar-value">{{ '%0.2f'|format(collector.time * 1000) }}</span>
+			<span class="sf-toolbar-label">ms</span>
+        {% endset %}
+        {% set text %}
+            <div class="sf-toolbar-info-piece">
+                <b>ActiveRecord Queries</b>
+                <span class="sf-toolbar-status {% if color %}sf-toolbar-status-{{ color }}{% endif %}">{{ collector.queryCount }}</span>
+            </div>
+            <div class="sf-toolbar-info-piece">
+                <b>Query time</b>
+                <span>{{ '%0.2f'|format(collector.time * 1000) }} ms</span>
+            </div>
+        {% endset %}
+
+        {% include '@WebProfiler/Profiler/toolbar_item.html.twig' with { 'link': profiler_url, status: color } %}
+    {% endif %}
+{% endblock %}
+
+{% block menu %}
+<span class="label">
+    <span class="icon">
+		<svg enable-background="new 0 0 48 48" width="26" height="32" version="1.1" viewBox="0 0 48 48" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g id="Expanded"><g><g><path d="M24,20c-11.215,0-20-3.953-20-9s8.785-9,20-9s20,3.953,20,9S35.215,20,24,20z M24,4C15.486,4,6,6.875,6,11s9.486,7,18,7     s18-2.875,18-7S32.514,4,24,4z"/></g><g><path d="M24,28c-11.215,0-20-3.953-20-9v-8c0-0.553,0.447-1,1-1s1,0.447,1,1v8c0,4.125,9.486,7,18,7s18-2.875,18-7v-8     c0-0.553,0.447-1,1-1s1,0.447,1,1v8C44,24.047,35.215,28,24,28z"/></g><g><path d="M24,37c-11.215,0-20-3.953-20-9v-9c0-0.553,0.447-1,1-1s1,0.447,1,1v9c0,4.125,9.486,7,18,7s18-2.875,18-7v-9     c0-0.553,0.447-1,1-1s1,0.447,1,1v9C44,33.047,35.215,37,24,37z"/></g><g><path d="M24,46c-11.215,0-20-3.953-20-9v-9c0-0.553,0.447-1,1-1s1,0.447,1,1v9c0,4.125,9.486,7,18,7s18-2.875,18-7v-9     c0-0.553,0.447-1,1-1s1,0.447,1,1v9C44,42.047,35.215,46,24,46z"/></g></g></g></svg>
+	</span>
+    <strong>ActiveRecord</strong>
+</span>
+{% endblock %}
+
+{% block panel %}
+    <h2>Query Metrics</h2>
+    {% if not collector.queryCount %}
+        <div class="empty">
+            <p>No ActiveRecord queries were performed.</p>
+        </div>
+    {% else %}
+        <div class="metrics">
+            <div class="metric">
+                <span class="value">{{ collector.queryCount }}</span>
+                <span class="label">Database Queries</span>
+            </div>
+
+            
+            <div class="metric">
+                <span class="value">{{ '%0.2f'|format(collector.time * 1000) }} <span class="unit">ms</span></span>
+                <span class="label">Query time</span>
+            </div>
+            
+        </div>
+		<br />
+        <h2>Queries</h2>
+        <table summary="Show logged queries">
+            <thead>
+            <tr>
+                <th nowrap>#</th>
+                <th>Query</th>
+                <th style="width:256px;">Parameters</th>
+				<th style="width:64px;">Time</th>
+            </tr>
+            </thead>
+            <tbody id="queries">
+            {% for i, query in collector.queries %}
+                <tr>
+                    <td class="font-normal text-small" nowrap>{{ loop.index }}</td>
+                    <td>
+                        <a name="active-record-query-{{ i }}" ></a>
+                        <pre style="white-space: pre-wrap;word-wrap: break-word;">{{ query.sql }}</pre>
+                    </td>
+                    <td>
+                        {{ profiler_dump(query.params) }}
+                    </td>
+					 <td class="font-normal text-small" nowrap>{{ '%0.2f'|format(query.time * 1000) }}&nbsp;ms</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}
