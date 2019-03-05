@@ -2,6 +2,7 @@
 
 namespace srsbiz\Silex;
 
+use ActiveRecord\Config;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
 
@@ -9,7 +10,7 @@ class ActiveRecordServiceProvider implements ServiceProviderInterface
 {
     function register(Application $app) {
         $app['ar.init'] = $app->share(function (Application $app) {
-            \ActiveRecord\Config::initialize(function ($cfg) use ($app) {
+            Config::initialize(function ($cfg) use ($app) {
                 $cfg->set_model_directory($app['ar.model_dir']);
                 $cfg->set_connections($app['ar.connections']);
                 $cfg->set_default_connection($app['ar.default_connection']);
@@ -22,24 +23,24 @@ class ActiveRecordServiceProvider implements ServiceProviderInterface
                     $cfg->set_cache($app['ar.cache'], isset($app['ar.cache_options']) ? $app['ar.cache_options'] : []);
                 }
             });
+			
+			if (isset($app['profiler']) && isset($app['ar.logger'])) {
+				$app['twig.loader.filesystem'] = $app->share($app->extend('twig.loader.filesystem', function ($loader, $app) {
+					$loader->addPath(__DIR__, 'ActiveRecord');
+					return $loader;
+				}));
+				$app['data_collector.templates'] = $app->share($app->extend('data_collector.templates', function ($templates, $app) {
+					$templates[] = array('ar', '@ActiveRecord/ar.html.twig');
+					return $templates;
+				}));
+				 $app['data_collectors'] = $app->share($app->extend('data_collectors', function ($collectors, $app) {
+					$collectors['ar'] = $app->share(function ($app) {
+						return new ActiveRecordDataCollector($app['ar.logger']);
+					});
+					return $collectors;
+				}));
+			}
         });
-
-        if ($app['debug']) {
-            $app['twig.loader.filesystem'] = $app->share($app->extend('twig.loader.filesystem', function ($loader, $app) {
-                $loader->addPath(__DIR__, 'ActiveRecord');
-                return $loader;
-            }));
-            $app['data_collector.templates'] = $app->share($app->extend('data_collector.templates', function ($templates, $app) {
-                $templates[] = array('ar', '@ActiveRecord/ar.html.twig');
-                return $templates;
-            }));
-             $app['data_collectors'] = $app->share($app->extend('data_collectors', function ($collectors, $app) {
-                $collectors['ar'] = $app->share(function ($app) {
-                    return new ActiveRecordDataCollector($app['ar.logger']);
-                });
-                return $collectors;
-            }));
-        }
     }
 
     function boot(Application $app){
