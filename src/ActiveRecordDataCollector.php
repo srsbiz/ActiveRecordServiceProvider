@@ -98,7 +98,7 @@ class ActiveRecordDataCollector extends DataCollector {
 	 * @return array
 	 */
 	private function fetchData() {
-		$queries = $queries = \array_map(function($item){
+		$queries = \array_map(function($item){
 			$item['sql'] = \PhpMyAdmin\SqlParser\Utils\Formatter::format($item['sql'], ['type' => 'html']);
 			return $item;
 		}, $this->logger->getQueries());
