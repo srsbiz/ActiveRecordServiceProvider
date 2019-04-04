@@ -2,6 +2,19 @@
 
 {% import _self as logger %}
 
+{% block head %}
+	{{ parent() }}
+	<style>
+		.sql-reserved { font-weight:bold;color:darkblue; }
+		.sql-keyword { font-weight:bold;color:darkgreen; }
+		.sql-comment { color:darkgrey; }
+		.sql-atom { color:maroon; }
+		.sql-number { font-weight:bold;color:darkred; }
+		.sql-string { color:limegreen; }
+		.sql-variable { color:darkmagenta; }
+	</style>
+{% endblock %}
+
 {% block toolbar %}
 	{% set color = collector.getStatusColor() %}
     {% if collector.queryCount %}
@@ -72,7 +85,7 @@
                     <td class="font-normal text-small" nowrap>{{ loop.index }}</td>
                     <td>
                         <a name="active-record-query-{{ i }}" ></a>
-                        <pre style="white-space: pre-wrap;word-wrap: break-word;">{{ query.sql }}</pre>
+                        <div>{{ query.sql|raw }}</div>
                     </td>
                     <td>
                         {{ profiler_dump(query.params) }}
